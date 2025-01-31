@@ -16,10 +16,8 @@ public class Waypoint : MonoBehaviour
     }
     public void AdjustHeightToTerrain()
     {
-        Debug.Log("1");
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f))
         {
-            Debug.Log("Bounce");
             transform.position = new Vector3(transform.position.x, hit.point.y + 0.5f, transform.position.z);
         }
     }

@@ -23,6 +23,7 @@ public abstract class UChVehicle : MonoBehaviour, IAdvance
 {
     protected DriverInputs inputs;
     public ChTerrain chTerrain;
+    public UChTerrainManager terrainManager;
     
     public UChVehicle()
     {
@@ -52,7 +53,8 @@ public abstract class UChVehicle : MonoBehaviour, IAdvance
         OnStart(); // Call the vehicle's onstart.
         
         // Find terrain in system and set to chTerrain
-        chTerrain = UChRigidTerrainManager.chronoRigidTerrain;
+        // chTerrain = UChRigidTerrainManager.chronoRigidTerrain;
+        chTerrain = terrainManager.chronoTerrain;
     }
         
     public void Advance(double step)

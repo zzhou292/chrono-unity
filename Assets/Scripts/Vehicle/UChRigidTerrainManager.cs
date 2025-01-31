@@ -20,7 +20,7 @@ using UnityEngine.UIElements;
 
 // Add Terrain prior to the UChVehicle (which is at -900)
 [DefaultExecutionOrder(-950)]
-public class UChRigidTerrainManager : MonoBehaviour
+public class UChRigidTerrainManager : UChTerrainManager
 {
     public static RigidTerrain chronoRigidTerrain;
 
@@ -61,6 +61,7 @@ public class UChRigidTerrainManager : MonoBehaviour
         // Initialize the terrain
         chronoRigidTerrain.Initialize();
 
+        chronoTerrain = chronoRigidTerrain;
 
         ///int count = 0;
         ///foreach (var item in chronoRigidTerrain.GetPatches())

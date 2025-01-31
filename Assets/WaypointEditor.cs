@@ -1,112 +1,50 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 
-[ExecuteInEditMode]
-public class WaypointEditor : MonoBehaviour
+[CustomEditor(typeof(WaypointGenerator))]
+public class WaypointEditor : Editor
 {
-    public List<Transform> waypoints = new List<Transform>();
-    public Color lineColor = Color.green;
-    public float sphereSize = 0.5f;
+    private WaypointGenerator generator;
+    private bool isAddingWaypoints = false;
 
-    public GameObject firstWaypointReference;
-
-    public void OnDrawGizmos()
+    private void OnEnable()
     {
-        Gizmos.color = lineColor;
-
-        if (waypoints == null || waypoints.Count < 2)
-            return;
-
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            if (waypoints[i] != null)
-            {
-                Gizmos.DrawSphere(waypoints[i].position, sphereSize);
-
-                if (i > 0 && waypoints[i - 1] != null)
-                {
-                    Gizmos.DrawLine(waypoints[i - 1].position, waypoints[i].position);
-                }
-            }
-        }
+        generator = (WaypointGenerator)target;
     }
-}
-
-
-[CustomEditor(typeof(WaypointEditor))]
-public class WaypointEditorInspector : Editor
-{
 
     public override void OnInspectorGUI()
     {
-        WaypointEditor script = (WaypointEditor)target;
-
-        script.lineColor = EditorGUILayout.ColorField("Line Color", script.lineColor);
-        script.sphereSize = EditorGUILayout.FloatField("Sphere Size", script.sphereSize);
-        script.firstWaypointReference = (GameObject)EditorGUILayout.ObjectField("First Waypoint Reference GameObject", script.firstWaypointReference, typeof(GameObject), true);
+        DrawDefaultInspector();
 
         if (GUILayout.Button("Add Waypoint"))
         {
-            GameObject waypoint = new GameObject("Waypoint " + script.waypoints.Count);
-
-            if (script.waypoints.Count > 0 && script.waypoints[script.waypoints.Count - 1] != null)
-            {
-                Vector3 newPosition = script.waypoints[script.waypoints.Count - 1].position + Vector3.right;
-                if (Physics.Raycast(newPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit))
-                {
-                    newPosition.y = hit.point.y;
-                }
-                waypoint.transform.position = newPosition;
-            }
-            else
-            {
-                Vector3 newPosition = script.firstWaypointReference.transform.position;
-                // Vector3 newPosition = Vector3.zero;
-                if (Physics.Raycast(newPosition + Vector3.up * 10, Vector3.down, out RaycastHit hit))
-                {
-                    newPosition.y = hit.point.y;
-                }
-                waypoint.transform.position = newPosition;
-            }
-
-            waypoint.transform.parent = script.transform;
-            var waypointScript = waypoint.AddComponent<Waypoint>();
-            waypointScript.AdjustHeightToTerrain();
-            script.waypoints.Add(waypoint.transform);
+            isAddingWaypoints = !isAddingWaypoints;
+            SceneView.duringSceneGui += OnSceneGUI;
+            Debug.Log(isAddingWaypoints ? "Click on terrain to add waypoints." : "Stopped adding waypoints.");
         }
 
-        if (GUILayout.Button("Clear Waypoints"))
+        if (!isAddingWaypoints)
         {
-            if (EditorUtility.DisplayDialog("Clear Waypoints", "Are you sure you want to delete all waypoints?", "Yes", "No"))
-            {
-                foreach (var wp in script.waypoints)
-                {
-                    if (wp != null)
-                        DestroyImmediate(wp.gameObject);
-                }
-                script.waypoints.Clear();
-            }
+            SceneView.duringSceneGui -= OnSceneGUI;
         }
+    }
 
-        if (GUILayout.Button("Adjust Heights"))
+    private void OnSceneGUI(SceneView sceneView)
+    {
+        if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && isAddingWaypoints)
         {
-            foreach (var wp in script.waypoints)
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+
             {
-                if (wp != null)
+                if (hit.collider.gameObject == generator.terrain.gameObject)
                 {
-                    var waypointScript = wp.GetComponent<Waypoint>();
-                    if (waypointScript != null)
-                    {
-                        waypointScript.AdjustHeightToTerrain();
-                    }
+                    generator.AddWaypoint(hit.point);
+                    Event.current.Use();
                 }
             }
-        }
-
-        if (GUI.changed)
-        {
-            EditorUtility.SetDirty(target);
         }
     }
 }
+#endif

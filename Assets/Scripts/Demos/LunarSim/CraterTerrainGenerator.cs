@@ -3,10 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Terrain))]
 public class CraterTerrainGenerator : MonoBehaviour
 {
+
+    private int terrainResolution;
+
     [Header("Terrain Settings")]
     public int terrainWidth = 512;
     public int terrainHeight = 512;
     public int terrainDepth = 50;
+    public float terrainSpacing = 1; // New field for terrain resolution
 
     [Header("Perlin Noise Settings")]
     public float scale = 20f;
@@ -29,7 +33,8 @@ public class CraterTerrainGenerator : MonoBehaviour
 
     TerrainData GenerateTerrain(TerrainData terrainData)
     {
-        terrainData.heightmapResolution = terrainWidth + 1;
+        terrainResolution = Mathf.CeilToInt(Mathf.Max(terrainWidth,terrainHeight)/terrainSpacing)+1;
+        terrainData.heightmapResolution = terrainResolution + 1;
         terrainData.size = new Vector3(terrainWidth, terrainDepth, terrainHeight);
         float[,] heights = GenerateHeights();
         heights = AddCraters(heights);
@@ -39,10 +44,10 @@ public class CraterTerrainGenerator : MonoBehaviour
 
     float[,] GenerateHeights()
     {
-        float[,] heights = new float[terrainWidth, terrainHeight];
-        for (int x = 0; x < terrainWidth; x++)
+        float[,] heights = new float[terrainResolution, terrainResolution];
+        for (int x = 0; x < terrainResolution; x++)
         {
-            for (int y = 0; y < terrainHeight; y++)
+            for (int y = 0; y < terrainResolution; y++)
             {
                 heights[x, y] = CalculateHeight(x, y);
             }
@@ -52,8 +57,8 @@ public class CraterTerrainGenerator : MonoBehaviour
 
     float CalculateHeight(int x, int y)
     {
-        float xCoord = (float)x / terrainWidth * scale + offsetX;
-        float yCoord = (float)y / terrainHeight * scale + offsetY;
+        float xCoord = (float)x / terrainResolution * scale + offsetX;
+        float yCoord = (float)y / terrainResolution * scale + offsetY;
         return Mathf.PerlinNoise(xCoord, yCoord);
     }
 
@@ -61,15 +66,15 @@ public class CraterTerrainGenerator : MonoBehaviour
     {
         for (int i = 0; i < numberOfCraters; i++)
         {
-            int craterX = Random.Range(0, terrainWidth);
-            int craterY = Random.Range(0, terrainHeight);
+            int craterX = Random.Range(0, terrainResolution);
+            int craterY = Random.Range(0, terrainResolution);
             float craterRadius = Mathf.Pow(Random.Range(Mathf.Pow(minCraterRadius, 2), Mathf.Pow(maxCraterRadius, 2)), 0.5f);
             float craterDepth = craterRadius * 0.5f; // Depth proportional to radius
             float rimHeight = craterRadius * rimHeightFactor;
 
-            for (int x = 0; x < terrainWidth; x++)
+            for (int x = 0; x < terrainResolution; x++)
             {
-                for (int y = 0; y < terrainHeight; y++)
+                for (int y = 0; y < terrainResolution; y++)
                 {
                     float distance = Vector2.Distance(new Vector2(x, y), new Vector2(craterX, craterY));
                     float normalizedDistance = distance / craterRadius;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaypointDriver : MonoBehaviour, IAdvance
 {    
     public UChVehicle vehicle;  // associated vehicle
-    public WaypointEditor waypoint_editor;
+    public WaypointGenerator waypoint_editor;
     private List<Transform> waypoints;
 
     public float kp = 1.0f; // Proportional gain for steering
@@ -75,7 +75,7 @@ public class WaypointDriver : MonoBehaviour, IAdvance
         // Calculate the angle error between the vehicle's forward direction and the target direction
         float angleError = Vector3.SignedAngle(vehicleForward, directionToWaypoint, Vector3.up);
 
-        Debug.Log(angleError);
+        // Debug.Log(angleError);
         
         if (Mathf.Abs(angleError) > 180) {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Count; // Move to the next waypoint (loop around)
