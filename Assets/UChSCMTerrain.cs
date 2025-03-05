@@ -185,10 +185,10 @@ public class UChSCMTerrain : MonoBehaviour
 
             // Get tile index
 
-            int chunkIndexX = (int)(xIndex / chunkRes);
-            int chunkIndexZ = (int)(zIndex / chunkRes);
+            int chunkIndexX = (int)(xIndex / (chunkRes - 1));
+            int chunkIndexZ = (int)(zIndex / (chunkRes - 1));
 
-
+            Debug.Log(chunkRes);
             Vector2Int chunkKey = new Vector2Int(chunkIndexX, chunkIndexZ);
 
             // Debug.Log(chunkIndexX);
@@ -206,8 +206,8 @@ public class UChSCMTerrain : MonoBehaviour
 
             // Get the index of the height in the tile
             
-            int localX = (xIndex % chunkRes);
-            int localZ = (zIndex % chunkRes);
+            int localX = (xIndex % (chunkRes - 1));
+            int localZ = (zIndex % (chunkRes- 1));
 
             // Debug.Log("########");
             // Debug.Log(localX);
@@ -267,28 +267,28 @@ public class UChSCMTerrain : MonoBehaviour
 
 
     }
-
     void SplitTerrain(Terrain terrain, int splitCountX, int splitCountZ)
     {
         TerrainData originalData = terrain.terrainData;
         int originalHeightmapResolution = originalData.heightmapResolution;
         Vector3 originalSize = originalData.size;
-
-        Debug.Log("######");
-        Debug.Log(originalHeightmapResolution);
-
+    
         // Each new chunk's terrain resolution (minus 1, because e.g. a 513x513 heightmap
         // splits into two chunks of 257x257 each, which is 513/2 + 1).
         int newHeightmapResolution = (originalHeightmapResolution - 1) / splitCountX + 1;
         float chunkWidth = originalSize.x / splitCountX;
         float chunkLength = originalSize.z / splitCountZ;
-
+    
         chunkSize = chunkWidth;
         chunkRes = newHeightmapResolution;
-
-        // Debug.Log("!!!!!!!!");
-        // Debug.Log(chunkRes);
-
+    
+        // --- 1) Obtain alphaMap info from original terrain ---
+        int alphaMapResolution = originalData.alphamapResolution;
+        int numAlphaLayers    = originalData.alphamapLayers;
+    
+        // For details:
+        int detailResolution = originalData.detailResolution;
+    
         // For each "tile" in splitX x splitZ
         for (int x = 0; x < splitCountX; x++)
         {
@@ -296,38 +296,172 @@ public class UChSCMTerrain : MonoBehaviour
             {
                 // 1) Create the new TerrainData
                 TerrainData chunkData = new TerrainData();
-                
-                // Heightmap resolution for the chunk 
+    
+                // Heightmap resolution for the chunk
                 chunkData.heightmapResolution = newHeightmapResolution;
                 // Keep the same vertical height
                 chunkData.size = new Vector3(chunkWidth, originalSize.y, chunkLength);
-
+    
                 // 2) Copy heights from the source
                 float[,] chunkHeights = GetChunkHeights(originalData, x, z, splitCountX, splitCountZ);
                 chunkData.SetHeights(0, 0, chunkHeights);
+    
+                // 3) Copy alphamaps
+                //    We need to slice the alphamap from the original. 
+                //    The slicing logic is analogous, but be aware that
+                //    the alphamap resolution might differ from the heightmap resolution.
+                float[,,] chunkAlphaMaps = GetChunkAlphaMaps(originalData, x, z, splitCountX, splitCountZ);
+                chunkData.alphamapResolution = chunkAlphaMaps.GetLength(0); 
+                // ^ or set it explicitly if you prefer a guaranteed size
+                chunkData.SetAlphamaps(0, 0, chunkAlphaMaps);
+    
+                // 4) Copy detail/grass layers
+                //    If the original terrain has multiple detail layers, 
+                //    iterate them and slice each layer into chunkData.
+                int detailLayers = originalData.detailPrototypes.Length;
+                chunkData.SetDetailResolution(detailResolution / splitCountX, 8); 
+                //   ^ note: set the resolution and pixelError (8 is a typical base). 
+                //     Adjust as needed for your project.
 
-                // 3) Create new Terrain GameObject
+                chunkData.terrainLayers = originalData.terrainLayers;
+
+                for (int layer = 0; layer < detailLayers; layer++)
+                {
+                    int[,] chunkDetailMap = GetChunkDetailMap(originalData, x, z, splitCountX, splitCountZ, layer);
+                    chunkData.SetDetailLayer(0, 0, layer, chunkDetailMap);
+                }
+    
+                // 5) Create new Terrain GameObject
                 GameObject chunkGO = Terrain.CreateTerrainGameObject(chunkData);
                 chunkGO.name = $"Terrain_Chunk_{x}_{z}";
+                chunkGO.GetComponent<Terrain>().materialTemplate = terrain.materialTemplate;
 
-                // 4) Position the chunk in the correct place
+                // 6) Position the chunk in the correct place
                 // The original Terrain might be offset in the scene (terrain.transform.position).
                 Vector3 terrainPosition = terrain.GetPosition();
                 float posX = terrainPosition.x + x * chunkWidth;
                 float posZ = terrainPosition.z + z * chunkLength;
                 chunkGO.transform.position = new Vector3(posX, terrainPosition.y, posZ);
-
-                // Store the newly created terrain for reference
+    
+                // 7) Store the newly created terrain for reference
                 terrainGrid.Add(chunkGO.GetComponent<Terrain>());
             }
         }
+    
+        // Disable the original big terrain so it doesn’t overlap
+        GetComponent<Terrain>().enabled = false;
     }
+    
+    private float[,,] GetChunkAlphaMaps(TerrainData originalData, int chunkX, int chunkZ, int splitCountX, int splitCountZ)
+    {
+        int alphaMapWidth = originalData.alphamapWidth;
+        int alphaMapHeight = originalData.alphamapHeight;
+        int numAlphaLayers = originalData.alphamapLayers;
+    
+        // The resolution for each chunk’s alphamap.
+        // This may or may not match the chunk’s heightmap logic exactly.
+        // Adjust if you want a different scheme.
+        int chunkAlphaWidth  = alphaMapWidth  / splitCountX;
+        int chunkAlphaHeight = alphaMapHeight / splitCountZ;
+    
+        // Calculate the starting index in the original alphamap
+        int startX = chunkAlphaWidth  * chunkX;
+        int startZ = chunkAlphaHeight * chunkZ;
+    
+        // Get the alpha slice
+        float[,,] alphaSlice = originalData.GetAlphamaps(startX, startZ, chunkAlphaWidth, chunkAlphaHeight);
+        return alphaSlice;
+    }
+    
+    private int[,] GetChunkDetailMap(TerrainData originalData, int chunkX, int chunkZ, int splitCountX, int splitCountZ, int layer)
+    {
+        int detailResolution = originalData.detailResolution;
+        int chunkDetailResolutionX = detailResolution / splitCountX;
+        int chunkDetailResolutionZ = detailResolution / splitCountZ;
+    
+        int startX = chunkDetailResolutionX * chunkX;
+        int startZ = chunkDetailResolutionZ * chunkZ;
+    
+        // Slice out the detail (grass) data for this layer
+        int[,] detailSlice = originalData.GetDetailLayer(startX, startZ, chunkDetailResolutionX, chunkDetailResolutionZ, layer);
+        return detailSlice;
+    }
+    
+    // Provided in your example, for splitting height data
+    // private float[,] GetChunkHeights(TerrainData originalData, int chunkX, int chunkZ, int splitCountX, int splitCountZ)
+    // {
+    //     int originalResolution = originalData.heightmapResolution;
+    //     int newResolutionX = (originalResolution - 1) / splitCountX + 1;
+    //     int newResolutionZ = (originalResolution - 1) / splitCountZ + 1;
+    
+    //     int startX = (newResolutionX - 1) * chunkX;
+    //     int startZ = (newResolutionZ - 1) * chunkZ;
+    
+    //     return originalData.GetHeights(startX, startZ, newResolutionX, newResolutionZ);
+    // }
+
+    // void SplitTerrain(Terrain terrain, int splitCountX, int splitCountZ)
+    // {
+    //     TerrainData originalData = terrain.terrainData;
+    //     int originalHeightmapResolution = originalData.heightmapResolution;
+    //     Vector3 originalSize = originalData.size;
+
+    //     Debug.Log("######");
+    //     Debug.Log(originalHeightmapResolution);
+
+    //     // Each new chunk's terrain resolution (minus 1, because e.g. a 513x513 heightmap
+    //     // splits into two chunks of 257x257 each, which is 513/2 + 1).
+    //     int newHeightmapResolution = (originalHeightmapResolution - 1) / splitCountX + 1;
+    //     float chunkWidth = originalSize.x / splitCountX;
+    //     float chunkLength = originalSize.z / splitCountZ;
+
+    //     chunkSize = chunkWidth;
+    //     chunkRes = newHeightmapResolution;
+
+    //     // Debug.Log("!!!!!!!!");
+    //     // Debug.Log(chunkRes);
+
+    //     // For each "tile" in splitX x splitZ
+    //     for (int x = 0; x < splitCountX; x++)
+    //     {
+    //         for (int z = 0; z < splitCountZ; z++)
+    //         {
+    //             // 1) Create the new TerrainData
+    //             TerrainData chunkData = new TerrainData();
+                
+    //             // Heightmap resolution for the chunk 
+    //             chunkData.heightmapResolution = newHeightmapResolution;
+    //             // Keep the same vertical height
+    //             chunkData.size = new Vector3(chunkWidth, originalSize.y, chunkLength);
+
+    //             // 2) Copy heights from the source
+    //             float[,] chunkHeights = GetChunkHeights(originalData, x, z, splitCountX, splitCountZ);
+    //             chunkData.SetHeights(0, 0, chunkHeights);
+
+    //             // 3) Create new Terrain GameObject
+    //             GameObject chunkGO = Terrain.CreateTerrainGameObject(chunkData);
+    //             chunkGO.name = $"Terrain_Chunk_{x}_{z}";
+    //             // chunkGO.GetComponent<Terrain>().;
+
+    //             // 4) Position the chunk in the correct place
+    //             // The original Terrain might be offset in the scene (terrain.transform.position).
+    //             Vector3 terrainPosition = terrain.GetPosition();
+    //             float posX = terrainPosition.x + x * chunkWidth;
+    //             float posZ = terrainPosition.z + z * chunkLength;
+    //             chunkGO.transform.position = new Vector3(posX, terrainPosition.y, posZ);
+
+    //             // Store the newly created terrain for reference
+    //             terrainGrid.Add(chunkGO.GetComponent<Terrain>());
+    //         }
+    //     }
+    //     GetComponent<Terrain>().enabled = false;
+    // }
 
 
-    /// <summary>
-    /// Extracts the height values for the sub-region [x, z] of the splitted terrain.
-    /// Returns a 2D float array sized [newHeightmapResolution, newHeightmapResolution].
-    /// </summary>
+    // /// <summary>
+    // /// Extracts the height values for the sub-region [x, z] of the splitted terrain.
+    // /// Returns a 2D float array sized [newHeightmapResolution, newHeightmapResolution].
+    // /// </summary>
     private float[,] GetChunkHeights(TerrainData originalData, int chunkX, int chunkZ, int splitCountX, int splitCountZ)
     {
         int originalResolution = originalData.heightmapResolution;
