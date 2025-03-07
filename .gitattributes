@@ -21,3 +21,4 @@
 *.terrainlayer -text merge=unityyamlmerge diff
 *.mixer -text merge=unityyamlmerge diff
 *.shadervariants -text merge=unityyamlmerge diff
+Assets/ChronoVehicle/Models/Polaris/meshes/*.obj filter=lfs diff=lfs merge=lfs -text

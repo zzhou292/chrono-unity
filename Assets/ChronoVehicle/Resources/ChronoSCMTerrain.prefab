@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4923809697739331328}
   - component: {fileID: 8581063918357861091}
   - component: {fileID: 4288923727769950543}
-  - component: {fileID: 6424391343700797295}
   - component: {fileID: 3638464821983472091}
   m_Layer: 0
   m_Name: Terrain
@@ -95,29 +94,6 @@ TerrainCollider:
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: ddabebde60d320547bf103cdbace4159, type: 2}
   m_EnableTreeColliders: 0
---- !u!114 &6424391343700797295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 831887898043353595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ee95fece28ae03c8a39efa159ea546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  terrainWidth: 50
-  terrainHeight: 50
-  terrainDepth: 20
-  terrainSpacing: 0.1
-  scale: 0.5
-  offsetX: 100
-  offsetY: 100
-  numberOfCraters: 40
-  minCraterRadius: 6
-  maxCraterRadius: 10
-  rimHeightFactor: 0.01
 --- !u!114 &3638464821983472091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,14 +106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1297a7a7eff7bdce9a27d86c0b7dc794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  terrainSplit: 0
   patchType: 1
-  tiled: 0
-  numberOfTiles: 1
-  smoothingFactor: 0.1
-  refineGreaterThanAngle: 15
-  coarseMeshGridSize: 2
-  numberOfRefinements: 3
-  maxTriangleEdgeLength: 1
 --- !u!1 &7687447254837902595
 GameObject:
   m_ObjectHideFlags: 0
