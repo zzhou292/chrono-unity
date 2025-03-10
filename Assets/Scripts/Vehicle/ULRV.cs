@@ -68,6 +68,8 @@ public class ULRV : UChVehicle
         var csys = new ChCoordsysd(Utils.ToChronoFlip(transform.position), Utils.ToChronoFlip(transform.rotation));
         vehicle.Initialize(csys, initForwardVel); // Initialise the vehicle
 
+        vehicle.GetSystem().SetGravitationalAcceleration(new ChVector3d(0, -1.62, 0.0)); // Set gravity
+
         vehicle.GetChassis().SetFixed(chassisFixed);
         vehicle.EnableBrakeLocking(brakeLocking);
 

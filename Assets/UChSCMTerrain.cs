@@ -75,8 +75,8 @@ public class UChSCMTerrain : MonoBehaviour
         chronoTerrain.SetSoilParameters(8.14e4,    // Bekker Kphi
                                 1.37e3,        // Bekker Kc
                                 1.1,      // Bekker n exponent
-                                0.8,     // Mohr cohesive limit (Pa)
-                                30,       // Mohr friction limit (degrees)
+                                0.9,     // Mohr cohesive limit (Pa)
+                                45,       // Mohr friction limit (degrees)
                                 0.01,     // Janosi shear coefficient (m)
                                 2e5,      // Elastic stiffness (Pa/m), before plastic yield
                                 3e3       // Damping (Pa s/m), proportional to negative vertical speed

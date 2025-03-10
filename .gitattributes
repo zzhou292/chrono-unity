@@ -22,3 +22,4 @@
 *.mixer -text merge=unityyamlmerge diff
 *.shadervariants -text merge=unityyamlmerge diff
 Assets/ChronoVehicle/Models/Polaris/meshes/*.obj filter=lfs diff=lfs merge=lfs -text
+*.cubemap filter=lfs diff=lfs merge=lfs -text
