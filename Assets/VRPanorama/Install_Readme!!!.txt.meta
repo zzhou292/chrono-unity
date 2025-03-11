@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ce945df0fa7122d43845d1c286d7f64d
+timeCreated: 1508217174
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Install_Readme!!!.txt
+  uploadId: 428644

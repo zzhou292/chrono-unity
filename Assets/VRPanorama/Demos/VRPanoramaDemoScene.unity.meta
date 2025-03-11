@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 94d0ffb7f72d4fd48ac30bec8d69067c
+labels:
+- VRPanorama
+timeCreated: 1432198646
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Demos/VRPanoramaDemoScene.unity
+  uploadId: 428644

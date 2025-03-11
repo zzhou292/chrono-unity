@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d379ecfd202fac242b4cd1a667cad228
+timeCreated: 1444089414
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/Materials/GreenVR.mat
+  uploadId: 428644

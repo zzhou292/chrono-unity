@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a4bd3b00ad1ed53458ec6ff07694985e
+timeCreated: 1488901510
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Scripts/FFmpegOut/Internal/Shader/CameraCapture.shader
+  uploadId: 428644

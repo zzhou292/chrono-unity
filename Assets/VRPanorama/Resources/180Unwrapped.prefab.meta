@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c2290a1a2a96f5544a619d05284f1c77
+timeCreated: 1498216233
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/180Unwrapped.prefab
+  uploadId: 428644

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: b596bcbba62aa5443bed6e21d9d2a636
+labels:
+- VRPanorama
+timeCreated: 1429353014
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/RTs/Materials/RCubemap.mat
+  uploadId: 428644

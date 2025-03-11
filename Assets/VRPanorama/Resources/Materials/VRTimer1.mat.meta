@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb8ac13e31e2e7145b3e6d4566a15fc5
+timeCreated: 1459477948
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/Materials/VRTimer1.mat
+  uploadId: 428644

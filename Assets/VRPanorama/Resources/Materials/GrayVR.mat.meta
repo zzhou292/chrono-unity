@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e1c9d57919317184fbec3604427f7a23
+timeCreated: 1444089414
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/Materials/GrayVR.mat
+  uploadId: 428644

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ad51151f7ec7f944db96f8bf0c4c449b
+labels:
+- VRPanorama
+timeCreated: 1429214927
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/RTs/Materials/BL.mat
+  uploadId: 428644

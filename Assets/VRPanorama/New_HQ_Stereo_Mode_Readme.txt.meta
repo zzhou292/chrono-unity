@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 161804540ffad2a438d6379a04340018
+timeCreated: 1502795521
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/New_HQ_Stereo_Mode_Readme.txt
+  uploadId: 428644

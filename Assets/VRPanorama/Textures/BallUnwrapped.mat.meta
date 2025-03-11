@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ba7cc594ac5c8f043b892670800dba21
+labels:
+- VRPanorama
+timeCreated: 1429181531
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Textures/BallUnwrapped.mat
+  uploadId: 428644

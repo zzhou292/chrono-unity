@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 58327a071d7ca804aa67155cbac07934
+timeCreated: 1441095693
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Shaders/VRAA2.shader
+  uploadId: 428644

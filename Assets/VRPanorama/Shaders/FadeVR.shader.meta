@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 61412d42b6c75e740b578ae5f0814f55
+labels:
+- VRPanorama
+timeCreated: 1429217023
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Shaders/FadeVR.shader
+  uploadId: 428644

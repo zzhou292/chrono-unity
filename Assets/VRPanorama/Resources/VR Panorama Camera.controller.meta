@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 06f5819a5edefd84a93713ccc81b4dcc
+timeCreated: 1440153564
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/VR Panorama Camera.controller
+  uploadId: 428644

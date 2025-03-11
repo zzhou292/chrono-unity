@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 75d2cbd8c4405754dadaf49742960105
+timeCreated: 1504292133
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/StereoPanoramaPlayer/Resources/New AmplifyShader.shader
+  uploadId: 428644

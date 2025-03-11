@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6756b9b55638aa642a1c00d4202b4238
+timeCreated: 1444221608
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Demos/VRMultilayeredCameras.unity
+  uploadId: 428644

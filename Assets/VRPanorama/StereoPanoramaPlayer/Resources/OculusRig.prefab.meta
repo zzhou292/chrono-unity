@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bcee9fab6a622b84997232e8a3fa5ac4
+timeCreated: 1453203553
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/StereoPanoramaPlayer/Resources/OculusRig.prefab
+  uploadId: 428644

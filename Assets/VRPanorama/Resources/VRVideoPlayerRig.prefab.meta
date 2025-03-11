@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a7b3730acd8b7a743946943bea143b10
+timeCreated: 1504129201
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Resources/VRVideoPlayerRig.prefab
+  uploadId: 428644

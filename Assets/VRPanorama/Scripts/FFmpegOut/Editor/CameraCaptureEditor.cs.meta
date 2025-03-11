@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 5e125d1c67e59c444a1e722899c8a950
+timeCreated: 1523664757
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/Scripts/FFmpegOut/Editor/CameraCaptureEditor.cs
+  uploadId: 428644

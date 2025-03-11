@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0feef7ce02026fc45a5d7dbed3ddb493
+timeCreated: 1453200819
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35102
+  packageName: VR Panorama 360 PRO Renderer
+  packageVersion: 3.2
+  assetPath: Assets/VRPanorama/StereoPanoramaPlayer/Resources/StereoSphere.mat
+  uploadId: 428644
