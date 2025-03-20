@@ -158,25 +158,26 @@ public class WaypointDriver : MonoBehaviour, IAdvance
                 float eye_acc_z_filtered = ((float)eyepoint_acc_z.Add((-eyepoint_acceleration.z + local_g.z)/G_2_MPSS));
 
                 // index 25,26,27,28,29,30,31,32: wheel center positions
-                WheelState wheel_LF_state = vehicle.GetChVehicle().GetWheel(0, VehicleSide.LEFT).GetState();
-                WheelState wheel_RF_state = vehicle.GetChVehicle().GetWheel(0, VehicleSide.RIGHT).GetState();
-                WheelState wheel_LR_state = vehicle.GetChVehicle().GetWheel(1, VehicleSide.LEFT).GetState();
-                WheelState wheel_RR_state = vehicle.GetChVehicle().GetWheel(1, VehicleSide.RIGHT).GetState();
+                // WheelState wheel_LF_state = vehicle.GetChVehicle().GetWheel(0, VehicleSide.LEFT).GetState();
+                // WheelState wheel_RF_state = vehicle.GetChVehicle().GetWheel(0, VehicleSide.RIGHT).GetState();
+                // WheelState wheel_LR_state = vehicle.GetChVehicle().GetWheel(1, VehicleSide.LEFT).GetState();
+                // WheelState wheel_RR_state = vehicle.GetChVehicle().GetWheel(1, VehicleSide.RIGHT).GetState();
+                // WheelState wheel_LF_state = vehicle.GetChVehicle().GetAxle(0).m_wheels[0].GetState();
 
-                float wheel_RF_pos_x = (float)(wheel_RF_state.pos.x);  // 25 - RF wheel center pos x - global
-                float wheel_RF_pos_y = (float)(wheel_RF_state.pos.y);  // 26 - RF wheel center pos y - global
-                float wheel_LF_pos_x = (float)(wheel_LF_state.pos.x);  // 27 - LF wheel center pos x - global
-                float wheel_LF_pos_y = (float)(wheel_LF_state.pos.y);  // 28 - LF wheel center pos y - global
-                float wheel_RR_pos_x = (float)(wheel_RR_state.pos.x);  // 29 - RR wheel center pos x - global
-                float wheel_RR_pos_y = (float)(wheel_RR_state.pos.y);  // 30 - RR wheel center pos y - global
-                float wheel_LR_pos_x = (float)(wheel_LR_state.pos.x);  // 31 - LR wheel center pos x - global
-                float wheel_LR_pos_y = (float)(wheel_LR_state.pos.y);  // 32 - LR wheel center pos y - global
+                float wheel_RF_pos_x = (float)(0.0);  // 25 - RF wheel center pos x - global
+                float wheel_RF_pos_y = (float)(0.0);  // 26 - RF wheel center pos y - global
+                float wheel_LF_pos_x = (float)(0.0);  // 27 - LF wheel center pos x - global
+                float wheel_LF_pos_y = (float)(0.0);  // 28 - LF wheel center pos y - global
+                float wheel_RR_pos_x = (float)(0.0);  // 29 - RR wheel center pos x - global
+                float wheel_RR_pos_y = (float)(0.0);  // 30 - RR wheel center pos y - global
+                float wheel_LR_pos_x = (float)(0.0);  // 31 - LR wheel center pos x - global
+                float wheel_LR_pos_y = (float)(0.0);  // 32 - LR wheel center pos y - global
 
-                // index 33,34,35,36: wheel rotation velocities
-                float lf_omega_filtered = (float)lf_wheel_vel.Add(wheel_RF_state.omega);  // 33 
-                float rf_omega_filtered = (float)rf_wheel_vel.Add(wheel_LF_state.omega);  // 34 
-                float lr_omega_filtered = (float)lr_wheel_vel.Add(wheel_RR_state.omega);  // 35
-                float rr_omega_filtered = (float)rr_wheel_vel.Add(wheel_LR_state.omega);  // 36
+                // // index 33,34,35,36: wheel rotation velocities
+                float lf_omega_filtered = (float)lf_wheel_vel.Add(0.0);  // 33 
+                float rf_omega_filtered = (float)rf_wheel_vel.Add(0.0);  // 34 
+                float lr_omega_filtered = (float)lr_wheel_vel.Add(0.0);  // 35
+                float rr_omega_filtered = (float)rr_wheel_vel.Add(0.0);  // 36
 
                 byte[] data = new byte[totalSize];
 
@@ -206,14 +207,14 @@ public class WaypointDriver : MonoBehaviour, IAdvance
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_x_filtered),0, data, 88, floatSize);  // 22
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_y_filtered),0, data, 92, floatSize);  // 23
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_z_filtered),0, data, 96, floatSize);  // 24
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_x), 0, data, 100, floatSize);  // 25
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_y), 0, data, 104, floatSize);  // 26
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_x), 0, data, 108, floatSize);  // 27
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_y), 0, data, 112, floatSize);  // 28
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_x), 0, data, 116, floatSize);  // 29
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_y), 0, data, 120, floatSize);  // 30
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_x), 0, data, 124, floatSize);  // 31
-                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_y), 0, data, 128, floatSize);  // 32
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_x), 0, data, 100, floatSize);  // 25
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_y), 0, data, 104, floatSize);  // 26
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_x), 0, data, 108, floatSize);  // 27
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_y), 0, data, 112, floatSize);  // 28
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_x), 0, data, 116, floatSize);  // 29
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_y), 0, data, 120, floatSize);  // 30
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_x), 0, data, 124, floatSize);  // 31
+                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_y), 0, data, 128, floatSize);  // 32
                 
 
                 udpSendClient.Send(data, data.Length, remoteEndPoint);
