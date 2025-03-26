@@ -5,7 +5,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System;
-
+using System.IO;
+using System.Text;
 
 
 public class WaypointDriver : MonoBehaviour, IAdvance
@@ -20,8 +21,18 @@ public class WaypointDriver : MonoBehaviour, IAdvance
     public static readonly float RADS_2_DEG = 180.0f / (float)chrono.CH_PI;
     public const float MS_2_MPH = 2.2369f;
     public const float M_2_FT = 3.28084f;
-    public const float G_2_MPSS = 9.81f;
+    public const float G_2_MPSS = 1.62f;    // garvitational pull. change here and chronosystem in unity!!!
 
+    
+    
+    // CSV logging
+    private StringBuilder csvBuffer = new StringBuilder();
+    private string csvFilePath;
+    private int bufferRowCount = 0;
+    private const int BUFFER_FLUSH_THRESHOLD = 1000; // Flush every 100 rows
+    private readonly object csvLock = new object();
+    
+    
     private UdpClient udpRecvClient;
     private UdpClient udpSendClient;
     private Thread receiveThread;
@@ -29,6 +40,8 @@ public class WaypointDriver : MonoBehaviour, IAdvance
     private volatile float steeringInput = 0f;
     private volatile float throttleInput = 0f;
     private volatile float brakingInput = 0f;
+
+
 
 
     private ChRunningAverage acc_x = new ChRunningAverage(100);
@@ -69,6 +82,28 @@ public class WaypointDriver : MonoBehaviour, IAdvance
         sendThread = new Thread(new ThreadStart(SendData));
         sendThread.IsBackground = true;
         sendThread.Start();
+
+          // Initialize CSV file with timestamp in filename
+        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        csvFilePath = "vehicle_data_" + timestamp + ".csv";
+        
+        // Create header row
+        string[] headers = new string[] {
+            "SimTime", "ChassisX", "ChassisY", "ChassisZ", 
+            "EyepointX", "EyepointY", "EyepointZ",
+            "ChassisRotX", "ChassisRotY", "ChassisRotZ",
+            "AngVelX", "AngVelY", "AngVelZ",
+            "ChassisVelX", "ChassisVelY", "ChassisVelZ",
+            "EyepointVelX", "EyepointVelY", "EyepointVelZ",
+            "AccLocX", "AccLocY", "AccLocZ",
+            "EyeAccX", "EyeAccY", "EyeAccZ",
+            "WheelRFPosX", "WheelRFPosY", "WheelLFPosX", "WheelLFPosY",
+            "WheelRRPosX", "WheelRRPosY", "WheelLRPosX", "WheelLRPosY",
+            "LFOmega", "RFOmega", "LROmega", "RROmega"
+        };
+        
+        // Write header to file
+        File.WriteAllText(csvFilePath, string.Join(",", headers) + "\n");
     }
 
     private void SendData()
@@ -141,12 +176,12 @@ public class WaypointDriver : MonoBehaviour, IAdvance
                 ChQuaterniond chassisRotQuat = vehicle.GetChVehicle().GetRot();
 
                 // Define gravity vector in global frame
-                ChVector3d gravity = new ChVector3d(0.0, 0.0, -9.81);
+                //ChVector3d gravity = new ChVector3d(0.0, 0.0, -9.81);
 
                 // Transform gravity to local frame using quaternion rotation
                 // First convert to the Unity equivalent for calculations
                 Quaternion unityChassisRot = Utils.FromChrono(chassisRotQuat);
-                Vector3 unityGravity = new Vector3(0, 0, -9.81f);
+                Vector3 unityGravity = new Vector3(0, 0, -9.81f);   // for acc, we use earth? TODO: judge this
                 Vector3 localGravity = Quaternion.Inverse(unityChassisRot) * unityGravity;
 
                 // Convert back to Chrono vector
@@ -207,19 +242,48 @@ public class WaypointDriver : MonoBehaviour, IAdvance
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_x_filtered),0, data, 88, floatSize);  // 22
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_y_filtered),0, data, 92, floatSize);  // 23
                 Buffer.BlockCopy(BitConverter.GetBytes(eye_acc_z_filtered),0, data, 96, floatSize);  // 24
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_x), 0, data, 100, floatSize);  // 25
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_y), 0, data, 104, floatSize);  // 26
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_x), 0, data, 108, floatSize);  // 27
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_y), 0, data, 112, floatSize);  // 28
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_x), 0, data, 116, floatSize);  // 29
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_y), 0, data, 120, floatSize);  // 30
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_x), 0, data, 124, floatSize);  // 31
-                // Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_y), 0, data, 128, floatSize);  // 32
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_x), 0, data, 100, floatSize);  // 25
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RF_pos_y), 0, data, 104, floatSize);  // 26
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_x), 0, data, 108, floatSize);  // 27
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LF_pos_y), 0, data, 112, floatSize);  // 28
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_x), 0, data, 116, floatSize);  // 29
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_RR_pos_y), 0, data, 120, floatSize);  // 30
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_x), 0, data, 124, floatSize);  // 31
+                Buffer.BlockCopy(BitConverter.GetBytes(wheel_LR_pos_y), 0, data, 128, floatSize);  // 32
+                Buffer.BlockCopy(BitConverter.GetBytes(lf_omega_filtered), 0, data, 132, floatSize);  // 33
+                Buffer.BlockCopy(BitConverter.GetBytes(rf_omega_filtered), 0, data, 136, floatSize);  // 34
+                Buffer.BlockCopy(BitConverter.GetBytes(lr_omega_filtered), 0, data, 140, floatSize);  // 35
+                Buffer.BlockCopy(BitConverter.GetBytes(rr_omega_filtered), 0, data, 144, floatSize);  // 36
                 
+                            // After preparing all 37 values, add them to CSV buffer
+                lock (csvLock)
+                {
+                    csvBuffer.AppendLine(string.Join(",", new string[] {
+                        simTime.ToString(), chassis_x.ToString(), chassis_y.ToString(), chassis_z.ToString(),
+                        eyepoint_x.ToString(), eyepoint_y.ToString(), eyepoint_z.ToString(),
+                        chassis_rot_x.ToString(), chassis_rot_y.ToString(), chassis_rot_z.ToString(),
+                        ang_vel_x_filtered.ToString(), ang_vel_y_filtered.ToString(), ang_vel_z_filtered.ToString(),
+                        chassis_vel_x.ToString(), chassis_vel_y.ToString(), chassis_vel_z.ToString(),
+                        eyepoint_velocity_x_filtered.ToString(), eyepoint_velocity_y_filtered.ToString(), eyepoint_velocity_z_filtered.ToString(),
+                        acc_loc_x_filtered.ToString(), acc_loc_y_filtered.ToString(), acc_loc_z_filtered.ToString(),
+                        eye_acc_x_filtered.ToString(), eye_acc_y_filtered.ToString(), eye_acc_z_filtered.ToString(),
+                        wheel_RF_pos_x.ToString(), wheel_RF_pos_y.ToString(), wheel_LF_pos_x.ToString(), wheel_LF_pos_y.ToString(),
+                        wheel_RR_pos_x.ToString(), wheel_RR_pos_y.ToString(), wheel_LR_pos_x.ToString(), wheel_LR_pos_y.ToString(),
+                        lf_omega_filtered.ToString(), rf_omega_filtered.ToString(), lr_omega_filtered.ToString(), rr_omega_filtered.ToString()
+                    }));
+                    
+                    bufferRowCount++;
+                    
+                    // Flush buffer to file when threshold is reached
+                    if (bufferRowCount >= BUFFER_FLUSH_THRESHOLD)
+                    {
+                        FlushCsvBuffer();
+                    }
+                }
 
                 udpSendClient.Send(data, data.Length, remoteEndPoint);
 
-                Thread.Sleep(10); // Optional delay (100 packets per second)
+                Thread.Sleep(4); // Optional delay (100 packets per second)
             }
             catch (Exception err)
             {
@@ -253,8 +317,8 @@ public class WaypointDriver : MonoBehaviour, IAdvance
 
     public void Advance(double step)
     {
-        throttleInput = 0.1f * throttleInput;
-        brakingInput = 0.2f * brakingInput;
+        throttleInput = 0.2f * throttleInput;
+        brakingInput = 0.3f * brakingInput;
         vehicle.SetDriverInputs(steeringInput, throttleInput, brakingInput);
     }
 
@@ -272,6 +336,21 @@ public class WaypointDriver : MonoBehaviour, IAdvance
         if (udpSendClient != null)
             udpSendClient.Close();
     }
+
+    private void FlushCsvBuffer()
+    {
+        try
+        {
+            File.AppendAllText(csvFilePath, csvBuffer.ToString());
+            csvBuffer.Clear();
+            bufferRowCount = 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Failed to write to CSV file: " + ex.Message);
+        }
+    }
+
 
 }
 
